@@ -6,8 +6,9 @@ const userController = {
   register: async (req, res) => {
     try {
       const { name, email, password, role } = req.body;
-      const user = await Users.findOne({ email });
-      if (user)
+      const user = { name, email, password, role };
+      const userInDB = await Users.findOne({ email });
+      if (userInDB)
         return res
           .status(400)
           .json({ msg: `An account with ${email} email already exists` });
@@ -30,7 +31,7 @@ const userController = {
         httpOnly: true,
         path: "/user/refresh_token",
       });
-      return res.json({ accessToken });
+      return res.json({ user, accessToken });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -112,7 +113,7 @@ const userController = {
 };
 
 const createAccessToken = (user) => {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1d" });
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "2m" });
 };
 
 const createRefreshToken = (user) => {
