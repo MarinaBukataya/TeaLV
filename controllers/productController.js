@@ -10,10 +10,13 @@ class APIFeatures {
     const queryObj = { ...this.queryString };
     const excludedFields = ["page", "sort", "limit"];
     excludedFields.forEach((el) => delete queryObj[el]);
-
     let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+    queryStr = queryStr.replace(
+      /\b(gte|gt|lte|lt|regex)\b/g,
+      (match) => `$${match}`
+    );
     this.query = this.query.find(JSON.parse(queryStr));
+
     return this;
   }
 
@@ -31,9 +34,7 @@ class APIFeatures {
     const page = this.queryString.page * 1 || 1;
     const limit = this.queryString.limit * 1 || 8;
     const skip = (page - 1) * limit;
-
     this.query = this.query.skip(skip).limit(limit);
-
     return this;
   }
 }
@@ -41,44 +42,30 @@ class APIFeatures {
 const productController = {
   getProducts: async (req, res) => {
     try {
-      console.log(req.query)
-      const features = new APIFeatures(Products.find(), req.query).filter().sort().paginate();
+      console.log(req.query);
+      const features = new APIFeatures(Products.find(), req.query)
+        .filter()
+        .sort()
+        .paginate();
       const products = await features.query;
-    
-      // const products = await Products.find();
+      if (products.length == 0)
+        return res.status(400).json({ msg: "Sorry, but there are no products matching your choice. Please choose a different tea." });
+      console.log(products.length);
       return res.json(products);
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
   },
-  
+
   createProduct: async (req, res) => {
     try {
-      const {
-        product_id,
-        title,
-        price,
-        description,
-        contents,
-        image,
-        category,
-      } = req.body;
-      console.log({
-        product_id,
-        title,
-        price,
-        description,
-        contents,
-        image,
-        category,
-      })
+      const { title, price, description, contents, image, category } = req.body;
       if (!image) return res.status(400).json({ msg: "No uploaded image" });
-      const product = await Products.findOne({ product_id });
-      
+      const product = await Products.findOne({ title });
+
       if (product)
         return res.status(400).json({ msg: "You already have this product" });
       const newProduct = new Products({
-        product_id,
         title,
         price,
         description,
@@ -104,12 +91,11 @@ const productController = {
 
   updateProduct: async (req, res) => {
     try {
-      const { product_id, title, price, description, contents, image, category } = req.body;
+      const { title, price, description, contents, image, category } = req.body;
       if (!image) return res.status(400).json({ msg: "No uploaded image" });
       await Products.findOneAndUpdate(
         { _id: req.params.id },
         {
-          product_id,
           title,
           price,
           description,
