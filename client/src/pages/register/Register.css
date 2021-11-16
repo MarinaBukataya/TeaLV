@@ -1,0 +1,29 @@
+#classicformpage .view {
+  background-image: url("../../assets/bg.JPG");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  height: 100vh;
+}
+
+#classicformpage .card {
+  background-color: rgba(126, 123, 215, 0.2);
+}
+
+#classicformpage h6 {
+  line-height: 1.7;
+}
+
+.md-form input:focus {
+  box-shadow: 0 1px 0 0 lightgreen !important;
+
+  border-bottom: 1px solid lightgreen !important;
+}
+
+
+
+#classicformpage label {
+  color: #fff !important;
+}
+
+
