@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { MDBIcon } from "mdbreact";
 import {
   MDBAlert,
-  MDBNavLink,
   MDBDropdown,
   MDBDropdownToggle,
   MDBDropdownMenu,
@@ -19,20 +18,28 @@ import { loadProducts } from "../../redux/reducers/productsReducer";
 import { LOGOUT } from "../../redux/actions/userActions";
 
 export default function Header() {
-  const error = useSelector((state) => state.userReducer.error);
   const isLoggedIn = useSelector((state) => state.userReducer.isLoggedIn);
   const role = useSelector((state) => state.userReducer.user.role);
   const categories = useSelector((state) => state.categoriesReducer.categories);
-  const otherError = useSelector((state) => state.errorsReducer.error);
   const cart = useSelector((state) => state.cartReducer.cart);
   const [itemCount, setItemCount] = useState();
   const history = useHistory();
-
+  const { pathname } = useLocation();
+  const [message, setMessage] = useState();
+  const error = useSelector((state) => state.errorsReducer.error);
   const dispatch = useDispatch();
+
+  console.log(pathname);
 
   useEffect(() => {
     dispatch(loadCategories());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (error !== undefined) {
+      setMessage(error.msg);
+    }
+  }, [error]);
 
   useEffect(() => {
     const getTotal = () => {
@@ -44,10 +51,6 @@ export default function Header() {
     };
     getTotal();
   }, [cart]);
-
-  function handleClearError() {
-    dispatch(clearErrors());
-  }
 
   function handleCategoryChange(e) {
     e.preventDefault();
@@ -67,46 +70,36 @@ export default function Header() {
   const adminRouter = () => {
     return (
       <>
-        <MDBNavLink to={"/add_product"} className="white-text h5">
+        <Link to={"/add_product"} className="white-text h5">
           Add product
-        </MDBNavLink>
-        <MDBNavLink to={"/view_orders"} className="white-text h5">
+        </Link>
+        <Link to={"/view_orders"} className="white-text h5">
           View orders
-        </MDBNavLink>
+        </Link>
       </>
     );
   };
 
   return (
     <MDBNavbar className="d-flex" fixed="top" scrolling color="mdb">
-      <MDBNavbarBrand className="mr-auto ml-5 pb-0" >
-        <MDBNavLink to="/">
+      <MDBNavbarBrand className="mr-auto ml-5 pb-0">
+        <Link to="/">
           <strong
             className="white-text h1"
             style={{ fontFamily: "'Indie Flower', cursive", fontSize: 50 }}
           >
             TeaLV
           </strong>
-        </MDBNavLink>
+        </Link>
       </MDBNavbarBrand>
-      {error && (
+      {message && (
         <MDBAlert
-          color="warning"
           className="mx-auto"
-          dismiss
-          onClick={handleClearError}
-        >
-          <strong>You’re so naugh-tea!</strong> {error.msg}. &nbsp;
-        </MDBAlert>
-      )}
-      {otherError && (
-        <MDBAlert
           color="warning"
-          className="mx-auto"
           dismiss
-          onClick={handleClearError}
+          onClose={() => dispatch(clearErrors())}
         >
-          <strong>You’re so naugh-tea!</strong> {otherError.msg}. &nbsp;
+          <strong>{message} &nbsp;</strong>
         </MDBAlert>
       )}
       <MDBDropdown>
@@ -114,7 +107,7 @@ export default function Header() {
           nav
           caret
           color="secondary"
-          className="white-text h5"
+          className="white-text h5 mr-3"
         >
           Collections
         </MDBDropdownToggle>
@@ -174,17 +167,21 @@ export default function Header() {
         ""
       )}
       {isLoggedIn ? (
-        <MDBNavLink to="/" className="white-text h5" onClick={handleLogout}>
+        <Link to="/" className="white-text h5 mr-3" onClick={handleLogout}>
           Log out
-        </MDBNavLink>
+        </Link>
+      ) : pathname === "/.login" ? (
+        <Link to={"/register"} className="white-text h5 mr-3">
+          Register
+        </Link>
       ) : (
         <>
-          <MDBNavLink to={"/register"} className="white-text h5">
+          <Link to={"/register"} className="white-text h5 mr-3">
             Register
-          </MDBNavLink>
-          <MDBNavLink to={"/login"} className="white-text h5">
+          </Link>
+          <Link to={"/login"} className="white-text h5 mr-3">
             Sign in
-          </MDBNavLink>
+          </Link>
         </>
       )}
     </MDBNavbar>

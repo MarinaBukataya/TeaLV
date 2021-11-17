@@ -50,7 +50,7 @@ export const loadProducts =
   async (dispatch, getState) => {
     try {
       await axios
-        .get(`/api/products?limit=${12}&${category}&${sort}&${search}`)
+        .get(`https://tealv.herokuapp.com/api/products?limit=${12}&${category}&${sort}&${search}`)
         .then((response) => {
           dispatch({ type: SET_PRODUCTS, payload: response.data });
         });
