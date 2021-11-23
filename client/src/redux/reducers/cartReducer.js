@@ -82,7 +82,7 @@ export const addCart = () => async (dispatch, getState) => {
     const token = getState().userReducer.token;
     const cart = getState().cartReducer.cart;
     await axios.patch(
-      "/user/add_to_cart",
+      "https://tealv.herokuapp.com/user/add_to_cart",
       { cart },
       {
         headers: { Authorization: token },

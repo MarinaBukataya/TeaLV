@@ -19,7 +19,7 @@ const initialState = {
 
   export const getPayments = () => async (dispatch, getState) => {
     try {
-      await axios.get("/api/categories").then((response) => {
+      await axios.get("https://tealv.herokuapp.com/api/payment").then((response) => {
         dispatch({ type: GET_PAYMENTS, payload: response.data });
       });
     } catch (err) {
@@ -34,7 +34,7 @@ const initialState = {
       const { paymentID, address } = payment;
       await axios
         .post(
-          "/api/payment",
+          "https://tealv.herokuapp.com/api/payment",
           { cart, paymentID, address },
           { headers: { Authorization: token } }
         )

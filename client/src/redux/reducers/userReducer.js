@@ -69,7 +69,7 @@ export const registerThunk = () => async (dispatch, getState) => {
   try {
     const user = getState().userReducer.user;
     await axios
-      .post("/user/register", {
+      .post("https://tealv.herokuapp.com/user/register", {
         name: user.name,
         email: user.email,
         password: user.password,
@@ -89,7 +89,7 @@ export const loginThunk = () => async (dispatch, getState) => {
   try {
     const { user } = getState().userReducer.user;
     await axios
-      .post("/user/login", { email: user.email, password: user.password })
+      .post("https://tealv.herokuapp.com/user/login", { email: user.email, password: user.password })
       .then((response) => {
         dispatch({ type: LOGIN_SUCCESS, payload: response.data });
       });

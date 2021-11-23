@@ -82,7 +82,7 @@ export default function AddProduct() {
   async function handleDeleteImage(e) {
     try {
       await axios.post(
-        "api/destroy",
+        "https://tealv.herokuapp.com/api/destroy",
         { public_id: product.image.public_id },
         { headers: { Authorization: token } }
       );
@@ -105,7 +105,7 @@ export default function AddProduct() {
         return alert("Unsupported image format");
       let formData = new FormData();
       formData.append("file", file);
-      const res = await axios.post("api/upload", formData, {
+      const res = await axios.post("https://tealv.herokuapp.com/api/upload", formData, {
         headers: {
           "content-type": "multipart/form-data",
           Authorization: token,

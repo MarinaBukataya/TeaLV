@@ -50,9 +50,12 @@ export const loadProducts =
   async (dispatch, getState) => {
     try {
       await axios
-        .get(`/api/products?limit=${page * 8}&${category}&${sort}&${search}`)
+        .get(
+          `https://tealv.herokuapp.com/api/products?limit=${
+            page * 8
+          }&${category}&${sort}&${search}`
+        )
         .then((response) => {
-
           dispatch({ type: SET_PRODUCTS, payload: response.data });
           console.log(response.data);
         });
@@ -80,7 +83,7 @@ export const createProduct =
       const token = getState().userReducer.token;
       await axios
         .post(
-          "/api/products",
+          "https://tealv.herokuapp.com/api/products",
           {
             product_id,
             title,
@@ -106,7 +109,7 @@ export const updateProduct = (product) => async (dispatch, getState) => {
 
     await axios
       .put(
-        `/api/products/${product._id}`,
+        `https://tealv.herokuapp.com/api/products/${product._id}`,
         {
           product_id: product.product_id,
           title: product.title,
@@ -132,7 +135,7 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
 
     await axios
       .delete(
-        `/api/products/${id}`,
+        `https://tealv.herokuapp.com/api/products/${id}`,
 
         { headers: { Authorization: token } }
       )

@@ -19,8 +19,7 @@ export default function categoriesReducer(state = initialState, action) {
 
 export const loadCategories = () => async (dispatch, getState) => {
   try {
-    console.log('Loading categories...');
-    await axios.get("/api/categories").then((response) => {
+    await axios.get("https://tealv.herokuapp.com/api/categories").then((response) => {
       dispatch({ type: SET_CATEGORIES, payload: response.data });
     });
   } catch (err) {
@@ -33,7 +32,7 @@ export const saveCategory = (category) => async (dispatch, getState) => {
     const token = getState().userReducer.token;
     await axios
       .post(
-        "/api/categories",
+        "https://tealv.herokuapp.com/api/categories",
         { name: category },
         { headers: { Authorization: token } }
       )
@@ -49,7 +48,7 @@ export const deleteCategory = (id) => async (dispatch, getState) => {
   try {
     const token = getState().userReducer.token;
     await axios
-      .delete(`/api/categories/${id}`, { headers: { Authorization: token } })
+      .delete(`https://tealv.herokuapp.com/api/categories/${id}`, { headers: { Authorization: token } })
       .then((response) => {
         dispatch(loadCategories());
       });
@@ -63,7 +62,7 @@ export const updateCategory = (id, category) => async (dispatch, getState) => {
     const token = getState().userReducer.token;
     await axios
       .put(
-        `/api/categories/${id}`,
+        `https://tealv.herokuapp.com/api/categories/${id}`,
         { name: category },
         { headers: { Authorization: token } }
       )
