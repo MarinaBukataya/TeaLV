@@ -46,13 +46,15 @@ export default function productsReducer(state = initialState, action) {
 }
 
 export const loadProducts =
-  (category = '', sort = '', search = '') =>
+  (category = "", sort = "", search = "", page = 1) =>
   async (dispatch, getState) => {
     try {
       await axios
-        .get(`https://tealv.herokuapp.com/api/products?limit=${12}&${category}&${sort}&${search}`)
+        .get(`/api/products?limit=${page * 8}&${category}&${sort}&${search}`)
         .then((response) => {
+
           dispatch({ type: SET_PRODUCTS, payload: response.data });
+          console.log(response.data);
         });
     } catch (err) {
       dispatch({ type: GET_ERRORS, payload: err.response.data });

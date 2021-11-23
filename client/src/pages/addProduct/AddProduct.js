@@ -38,7 +38,6 @@ export default function AddProduct() {
       products.forEach((p) => {
         if (p._id === param.id) {
           setProduct({
-            product_id: p.product_id,
             title: p.title,
             price: p.price,
             description: p.description,
@@ -52,7 +51,6 @@ export default function AddProduct() {
       setOnEdit(false);
 
       setProduct({
-        product_id: nextId(products),
         title: "",
         price: "",
         description: "",
@@ -63,13 +61,7 @@ export default function AddProduct() {
     }
   }, [products, param.id]);
 
-  function nextId(products) {
-    const maxId = products.reduce(
-      (maxId, product) => Math.max(product.product_id, maxId),
-      0
-    );
-    return maxId + 1;
-  }
+  
 
   function onInputChangeHandler(e) {
     const { name, value } = e.target;
@@ -190,13 +182,6 @@ export default function AddProduct() {
             <MDBCard>
               <MDBCardBody>
                 <form onSubmit={onSubmitHandler}>
-                  <MDBInput
-                    label="Num."
-                    name="product_id"
-                    value={product.product_id}
-                    onChange={onInputChangeHandler}
-                    required
-                  />
                   <MDBInput
                     label="Title"
                     name="title"

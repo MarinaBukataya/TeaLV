@@ -19,6 +19,7 @@ export default function categoriesReducer(state = initialState, action) {
 
 export const loadCategories = () => async (dispatch, getState) => {
   try {
+    console.log('Loading categories...');
     await axios.get("/api/categories").then((response) => {
       dispatch({ type: SET_CATEGORIES, payload: response.data });
     });

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   MDBRow,
   MDBCard,
@@ -8,17 +8,29 @@ import {
   MDBTableHead,
   MDBBtn,
   MDBTableFoot,
+  MDBAlert,
 } from "mdbreact";
 import { useSelector, useDispatch } from "react-redux";
-import { REMOVE_FROM_CART } from "../../redux/actions/cartActions";
+import {
+  REMOVE_FROM_CART,
+  SET_CART,
+  EMPTY_CART,
+} from "../../redux/actions/cartActions";
+import { createPayment } from "../../redux/reducers/paymentsReducer";
 import { addCart } from "../../redux/reducers/cartReducer";
+import PayPal from "./PayPal.js";
 
 export default function Cart() {
   const cart = useSelector((state) => state.cartReducer.cart);
   const dispatch = useDispatch();
+  const [paymentSuccessful, setPaymentSuccessful] = useState(false);
 
   function handleRemoveFromCart(id) {
     dispatch({ type: REMOVE_FROM_CART, payload: id });
+    dispatch(addCart());
+  }
+  function handleAddToCart(product) {
+    dispatch({ type: SET_CART, payload: product });
     dispatch(addCart());
   }
 
@@ -26,6 +38,14 @@ export default function Cart() {
     (totalAmount, { price, quantity }) => totalAmount + quantity * price,
     0
   );
+
+  const paymentSuccess = async (payment) => {
+    const { paymentID, address } = payment;
+    dispatch(createPayment({ paymentID, address }));
+    dispatch({ type: EMPTY_CART });
+    dispatch(addCart());
+    setPaymentSuccessful(true);
+  };
 
   return (
     <MDBRow
@@ -47,7 +67,7 @@ export default function Cart() {
                 <th>Price</th>
                 <th>Quantity</th>
                 <th>Amount</th>
-                <th></th>
+                <th colspan="2"></th>
               </tr>
             </MDBTableHead>
             <MDBTableBody>
@@ -79,6 +99,17 @@ export default function Cart() {
                     >
                       REMOVE
                     </MDBBtn>
+
+                    <MDBBtn
+                      key={product._id}
+                      color="purple"
+                      outline
+                      className="px-3 py-2 z-depth-0"
+                      style={{ width: "87px" }}
+                      onClick={() => handleAddToCart(product)}
+                    >
+                      ADD
+                    </MDBBtn>
                   </td>
                 </tr>
               ))}
@@ -94,7 +125,18 @@ export default function Cart() {
                   ${cartTotalAmount.toFixed(2)}
                 </td>
                 <td>
-                  <MDBBtn color="light-green">Complete purchase</MDBBtn>
+                  {paymentSuccessful ? (
+                    <MDBAlert color="success" dismiss onClose={() => setPaymentSuccessful(false)}>
+                      <strong>
+                        Thank you, your payment was submitted successfully!
+                      </strong>
+                    </MDBAlert>
+                  ) : (
+                    <PayPal
+                      total={cartTotalAmount}
+                      paymentSuccess={paymentSuccess}
+                    />
+                  )}
                 </td>
               </tr>
             </MDBTableFoot>

@@ -4,6 +4,7 @@ import errorsReducer from "./errorsReducer";
 import categoriesReducer from "./categoriesReducer";
 import productsReducer from "./productsReducer";
 import cartReducer from "./cartReducer";
+import paymentsReducer from "./paymentsReducer";
 
 
 export default combineReducers({
@@ -12,4 +13,5 @@ export default combineReducers({
     categoriesReducer,
     productsReducer,
     cartReducer,
+    paymentsReducer
 })

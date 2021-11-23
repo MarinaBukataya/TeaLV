@@ -71,7 +71,7 @@ export default function ViewProduct() {
               <br></br>
               <p>{product.contents}</p>
               <p>{product.description}</p>
-              <p>Sold: {product.sold}</p>
+              {/* <p>Sold: {product.sold}</p> */}
             </h4>
             <div className="my-4">
               <MDBCard></MDBCard>

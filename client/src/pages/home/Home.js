@@ -6,6 +6,7 @@ import { MDBContainer, MDBRow, MDBCol } from "mdbreact";
 import Carousel from "../../components/carousel/Carousel";
 import { useLocation } from "react-router-dom";
 import Filters from "../../components/filters/Filters";
+import ViewMore from "../../components/viewMore/ViewMore";
 import Footer from "../../components/footer/Footer";
 
 export default function Home() {
@@ -32,6 +33,7 @@ export default function Home() {
           </MDBCol>
         ))}
       </MDBRow>
+      <ViewMore/>
       <Footer/>
     </MDBContainer>
   );

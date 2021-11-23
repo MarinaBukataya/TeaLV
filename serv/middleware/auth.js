@@ -4,7 +4,6 @@ const auth = (req, res, next) => {
   try {
     const token = req.header("Authorization");
     if (!token) return res.status(401).json({ msg: "No token, authorization denied" });
-    console.log(token)
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
       if (err) return res.status(401).json({ msg: "Invalid authorization" });
       req.user = user;

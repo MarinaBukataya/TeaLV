@@ -1,4 +1,4 @@
-import { SET_CART, REMOVE_FROM_CART } from "../actions/cartActions";
+import { SET_CART, REMOVE_FROM_CART, EMPTY_CART } from "../actions/cartActions";
 import axios from "axios";
 import { GET_ERRORS } from "../actions/errorsActions";
 
@@ -67,7 +67,11 @@ export default function cartReducer(state = initialState, action) {
           )
           .filter((item) => item.quantity > 0),
       };
-
+      case EMPTY_CART:
+        return {
+          ...state,
+          cart: []
+        };
     default:
       return state;
   }
@@ -77,7 +81,6 @@ export const addCart = () => async (dispatch, getState) => {
   try {
     const token = getState().userReducer.token;
     const cart = getState().cartReducer.cart;
-    console.log(token)
     await axios.patch(
       "/user/add_to_cart",
       { cart },

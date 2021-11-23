@@ -29,8 +29,6 @@ export default function Header() {
   const error = useSelector((state) => state.errorsReducer.error);
   const dispatch = useDispatch();
 
-  console.log(pathname);
-
   useEffect(() => {
     dispatch(loadCategories());
   }, [dispatch]);
@@ -70,12 +68,12 @@ export default function Header() {
   const adminRouter = () => {
     return (
       <>
-        <Link to={"/add_product"} className="white-text h5">
+        <Link to={"/add_product"} className="white-text h5 mr-3">
           Add product
         </Link>
-        <Link to={"/view_orders"} className="white-text h5">
+        {/* <Link to={"/view_orders"} className="white-text h5 mr-3">
           View orders
-        </Link>
+        </Link> */}
       </>
     );
   };
@@ -170,7 +168,7 @@ export default function Header() {
         <Link to="/" className="white-text h5 mr-3" onClick={handleLogout}>
           Log out
         </Link>
-      ) : pathname === "/.login" ? (
+      ) : pathname === "/login" ? (
         <Link to={"/register"} className="white-text h5 mr-3">
           Register
         </Link>
